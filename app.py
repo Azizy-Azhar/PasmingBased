@@ -24,4 +24,3 @@ st.write("Tuliskan butir-butir kesimpulan dari analisis.")
 
 st.write("## Referensi / Daftar Pustaka")
 st.write("Tuliskan di bagian ini referensi yang digunakan dalam proyek kelompok ini, misalnya sumber data, makalah ilmiah, dsb.")
-
