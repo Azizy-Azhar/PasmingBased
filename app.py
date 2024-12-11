@@ -4,7 +4,7 @@ import plotly.express as px
 
 st.title("Kelompok PasmingBased")
 
-<<<<<<< HEAD
+ HEAD
 st.write("## Visualisasi")
 st.write("Buat visualisasi yang menurut kelompok kalian perlu ditampilkan.")
 st.write("Gunakan juga elemen-elemen interaktif streamlit.")
@@ -13,7 +13,7 @@ data_path = "Happiness.csv"
 data = pd.read_csv(data_path, delimiter=';', skiprows=2)
 data = data.rename(columns={"Unnamed: 0": "Country"})
 data.set_index("Kabupaten/", inplace=True)
-=======
+
 st.write("# Tugas Kelompok PasmingBased")
 
 st.write("## Pendahuluan")
@@ -34,4 +34,4 @@ st.write("Tuliskan butir-butir kesimpulan dari analisis.")
 
 st.write("## Referensi / Daftar Pustaka")
 st.write("Tuliskan di bagian ini referensi yang digunakan dalam proyek kelompok ini, misalnya sumber data, makalah ilmiah, dsb.")
->>>>>>> 66bb26b15fcde7e2e26be87f9cae3dc4771cff5c
+
