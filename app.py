@@ -7,7 +7,8 @@ st.title("Kelompok PasmingBased")
 st.write("# Tugas Kelompok PasmingBased")
 
 st.write("## Pendahuluan")
-st.write("Tuliskan di bagian ini latar belakang data apa yang dipilih, mengapa kelompok memilih data ini, dsb.")
+st.write(""Data kemiskinan di Jawa Tengah dipilih sebagai topik utama dalam analisis ini karena kemiskinan adalah masalah sosial dan ekonomi yang masih menjadi tantangan besar di Indonesia, termasuk di Jawa Tengah. Meskipun Jawa Tengah termasuk salah satu provinsi dengan kontribusi signifikan terhadap PDB nasional, tingkat kemiskinan yang tinggi masih menjadi isu yang perlu mendapat perhatian serius.")
+st.write("Dengan menganalisis data kemiskinan, kita bisa lebih memahami alasan di balik ketimpangan ini dan menemukan solusi yang tepat. Topik ini juga penting karena bisa membantu pemerintah dan masyarakat mencari cara untuk mengurangi kemiskinan, khususnya di daerah-daerah yang paling membutuhkan perhatian.").")
 
 st.write("## Deskripsi Data")
 st.write("Tuliskan di bagian ini deskripsi tentang data yang digunakan.")
