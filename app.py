@@ -9,7 +9,7 @@ st.write("# Tugas Kelompok PasmingBased")
 st.write("## Pendahuluan")
 st.write("Tuliskan di bagian ini latar belakang data apa yang dipilih, mengapa kelompok memilih data ini, dsb.")
 st.write("## Deskripsi Data")
-st.write("Tuliskan di bagian ini deskripsi tentang data yang digunakan.")
+st.write("Data yang digunakan mencakup informasi tentang tingkat kemiskinan,presentase penduduk miskin, PDRB harga konstan, dab  Indeks Pembangunan Manusia (IPM) di Jawa Tengah. Data ini berasal dari sumber resmi seperti Badan Pusat Statistik (BPS) yang memberikan gambaran tentang kondisi ekonomi dan sosial di berbagai kabupaten/kota di provinsi ini.")
 
 st.write("## Visualisasi")
 
