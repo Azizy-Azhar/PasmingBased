@@ -15,46 +15,70 @@ st.write("## Deskripsi Data")
 st.write("Data yang digunakan mencakup informasi tentang tingkat kemiskinan,presentase penduduk miskin, PDRB harga konstan, dab  Indeks Pembangunan Manusia (IPM) di Jawa Tengah. Data ini berasal dari sumber resmi seperti Badan Pusat Statistik (BPS) yang memberikan gambaran tentang kondisi ekonomi dan sosial di berbagai kabupaten/kota di provinsi ini.")
 
 st.write("## Visualisasi")
-# Load data
+# Fungsi untuk memuat data
 def load_data(file_path):
     try:
         data = pd.read_excel(file_path)
+        data['TAHUN'] = pd.to_numeric(data['TAHUN'], errors='coerce')
+        data.columns = data.columns.str.strip()  # Hapus spasi ekstra
         return data
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return None
 
-# Load the data
+# Load data
 data_file = "poor.xlsx"
 data = load_data(data_file)
-    
- # Select box untuk memilih Region
-region = st.selectbox(
-    "Pilih Kabupaten/Kota:", 
-    options=["Semua"] + list(data['Region'].unique()), 
-    key="select_Region"
-)
 
-# Select box untuk memilih Tahun
-year = st.selectbox(
-    "Pilih TAHUN:", 
-    ['2015', '2016', '2017', '2018', '2019', '2020']
-)
+if data is not None:
+    st.write("Kolom pada DataFrame:", data.columns.tolist())  # Debugging nama kolom
 
-# Filter data berdasarkan pilihan pengguna
-filtered_data = data.copy()
-if region != "Semua":
-    filtered_data = filtered_data[filtered_data['Region'] == region]
+    # Pilih Kabupaten/Kota
+    region = st.selectbox(
+        "Pilih Kabupaten/Kota:", 
+        options=["Semua"] + list(data['Region'].unique()), 
+        key="select_Region"
+    )
+
+    # Pilih Tahun
+    year = st.selectbox(
+        "Pilih TAHUN:", 
+        options=["Semua"] + sorted(data['TAHUN'].unique())
+    )
+
+    # Filter data
+    filtered_data = data.copy()
+    if region != "Semua":
+        filtered_data = filtered_data[filtered_data['Region'] == region]
     if year != "Semua":
-        filtered_data = filtered_data[filtered_data['TAHUN'] == year]
-# Visualisasi
-    st.header("Tren Kemiskinan")
-    line_chart = alt.Chart(filtered_data).mark_line().encode(
-        x=f'TAHUN',
-        color='Region',
-        tooltip=['Region', 'TAHUN', 'Value']
-    ).interactive()
-    st.altair_chart(line_chart, use_container_width=True)
+        filtered_data = filtered_data[filtered_data['TAHUN'] == int(year)]
+
+    if filtered_data.empty:
+        st.warning("Tidak ada data yang sesuai dengan pilihan.")
+    else:
+        # Transformasi data untuk visualisasi
+        melted_data = filtered_data.melt(
+            id_vars=['Region', 'TAHUN'],
+            value_vars=[
+                'TINGKAT KEMISKINAN (Rb Orang)', 
+                'PRESENTASE PENDUDUK MISKIN', 
+                'PDRB HARGA KONSTAN', 
+                'INDEKS PEMBANGUNAN MANUSIA (IPM)'
+            ],
+            var_name='Indikator',
+            value_name='Nilai'
+        )
+
+        # Visualisasi
+        st.header("Tren Kemiskinan dan Indikator Terkait")
+        line_chart = alt.Chart(melted_data).mark_line().encode(
+            x='TAHUN:O',
+            y='Nilai:Q',
+            color='Indikator:N',
+            tooltip=['Region:N', 'TAHUN:O', 'Indikator:N', 'Nilai:Q']
+        ).interactive()
+
+        st.altair_chart(line_chart, use_container_width=True)
 
 
 
