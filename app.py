@@ -1,8 +1,9 @@
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import altair as alt
-data_file = "C:\\path\\to\\your\\file\\poor.xlsx"
+data_file = "poor.xlsx"
 
 st.title("Analisis Kemiskinan Jawa Tengah")
 
@@ -27,9 +28,6 @@ def load_data(file_path):
 # Load the data
 data_file = "poor.xlsx"
 data = load_data(data_file)
-
-if data is not None:
-    st.title("Dashboard Kemiskinan Jawa Tengah")
     
  # Select box untuk memilih Region
 region = st.selectbox(
@@ -47,21 +45,17 @@ year = st.selectbox(
 # Filter data berdasarkan pilihan pengguna
 filtered_data = data.copy()
 if region != "Semua":
-        filtered_data = filtered_data[filtered_data['Region'] == region]
-if year != "Semua":
-        filtered_data = filtered_data[filtered_data[year_column] == year]
+    filtered_data = filtered_data[filtered_data['Region'] == region]
+    if year != "Semua":
+        filtered_data = filtered_data[filtered_data['TAHUN'] == year]
 # Visualisasi
     st.header("Tren Kemiskinan")
     line_chart = alt.Chart(filtered_data).mark_line().encode(
-        x=f'{year_column}:O',
-        y='Value',
+        x=f'TAHUN',
         color='Region',
-        tooltip=['Region', year_column, 'Value']
+        tooltip=['Region', 'TAHUN', 'Value']
     ).interactive()
     st.altair_chart(line_chart, use_container_width=True)
-
-
-
 
 
 
@@ -71,5 +65,5 @@ st.write("Buat analisis sederhana dari visualisasi data yang muncul di bagian se
 st.write("## Kesimpulan")
 st.write("Tuliskan butir-butir kesimpulan dari analisis.")
 
-st.write("## Referensi / Daftar Pustaka")
+st.write("## Referensi / Daftar Pustaka")f
 st.write("Tuliskan di bagian ini referensi yang digunakan dalam proyek kelompok ini, misalnya sumber data, makalah ilmiah, dsb.")
