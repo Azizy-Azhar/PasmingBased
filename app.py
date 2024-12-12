@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -65,5 +64,6 @@ st.write("Buat analisis sederhana dari visualisasi data yang muncul di bagian se
 st.write("## Kesimpulan")
 st.write("Tuliskan butir-butir kesimpulan dari analisis.")
 
-st.write("## Referensi / Daftar Pustaka")f
+st.write("## Referensi / Daftar Pustaka")
 st.write("Tuliskan di bagian ini referensi yang digunakan dalam proyek kelompok ini, misalnya sumber data, makalah ilmiah, dsb.")
+
