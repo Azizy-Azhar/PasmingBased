@@ -1,86 +1,95 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 import plotly.express as px
-import altair as alt
-data_file = "poor.xlsx"
 
-st.title("Analisis Kemiskinan Jawa Tengah")
+# Load data
+data_file = "Kemiskinan.xlsx"
+df = pd.read_excel(data_file)
+
+# Dictionary for mapping regions
+kamus_ticker = {row['Kabupaten/Kota']: row['Kabupaten/Kota'] for _, row in df.iterrows()}
+
+st.title("Analisis Jumlah Penduduk Miskin di Provinsi Jawa Tengah")
 
 st.write("# Tugas Kelompok PasmingBased")
 
 st.write("## Pendahuluan")
-st.write("Data kemiskinan di Jawa Tengah dipilih sebagai topik utama dalam analisis ini karena kemiskinan adalah masalah sosial dan ekonomi yang masih menjadi tantangan besar di Indonesia, termasuk di Jawa Tengah. Meskipun Jawa Tengah termasuk salah satu provinsi dengan kontribusi signifikan terhadap PDB nasional, tingkat kemiskinan yang tinggi masih menjadi isu yang perlu mendapat perhatian serius.")
-st.write("Dengan menganalisis data kemiskinan, kita bisa lebih memahami alasan di balik ketimpangan ini dan menemukan solusi yang tepat. Topik ini juga penting karena bisa membantu pemerintah dan masyarakat mencari cara untuk mengurangi kemiskinan, khususnya di daerah-daerah yang paling membutuhkan perhatian.")
+st.write("""
+Kemiskinan masih menjadi tantangan besar di Jawa Tengah, meskipun provinsi ini memiliki kontribusi signifikan terhadap perekonomian nasional. Dashboard ini menyajikan visualisasi data jumlah penduduk miskin di berbagai kabupaten/kota di Jawa Tengah, bertujuan untuk memberikan gambaran tentang distribusi kemiskinan dan mendukung perumusan kebijakan untuk mengurangi ketimpangan sosial-ekonomi.
+""")
 st.write("## Deskripsi Data")
-st.write("Data yang digunakan mencakup informasi tentang tingkat kemiskinan,presentase penduduk miskin, PDRB harga konstan, dab  Indeks Pembangunan Manusia (IPM) di Jawa Tengah. Data ini berasal dari sumber resmi seperti Badan Pusat Statistik (BPS) yang memberikan gambaran tentang kondisi ekonomi dan sosial di berbagai kabupaten/kota di provinsi ini.")
+st.write("Data yang digunakan dalam analisis ini mencakup jumlah penduduk miskin dalam ribuan (000) di setiap kabupaten/kota di Jawa Tengah dari tahun 2015 hingga 2020. Indikator yang digunakan adalah jumlah penduduk miskin, yang diperoleh dari Badan Pusat Statistik (BPS).")
 
 st.write("## Visualisasi")
-# Fungsi untuk memuat data
-def load_data(file_path):
-    try:
-        data = pd.read_excel(file_path)
-        data['TAHUN'] = pd.to_numeric(data['TAHUN'], errors='coerce')
-        data.columns = data.columns.str.strip()  # Hapus spasi ekstra
-        return data
-    except Exception as e:
-        st.error(f"Error loading data: {e}")
-        return None
 
-# Load data
-data_file = "poor.xlsx"
-data = load_data(data_file)
+# Pilihan kabupaten/kota, termasuk pilihan "Semua"
+kabupaten = df['Kabupaten/Kota'].unique()
+kabupaten_terpilih = st.selectbox(
+    'Pilih Kabupaten/Kota:',
+    ['Semua'] + list(kabupaten)  # Menambahkan 'Semua' sebagai opsi pertama
+)
 
-if data is not None:
-    st.write("Kolom pada DataFrame:", data.columns.tolist())  # Debugging nama kolom
+# Filter data berdasarkan kabupaten/kota yang dipilih
+if kabupaten_terpilih == 'Semua':
+    df_kabupaten = df  # Jika 'Semua' dipilih, tampilkan seluruh data
+else:
+    df_kabupaten = df[df['Kabupaten/Kota'] == kabupaten_terpilih]  # Jika kabupaten/kota dipilih, filter data sesuai
 
-    # Pilih Kabupaten/Kota
-    region = st.selectbox(
-        "Pilih Kabupaten/Kota:", 
-        options=["Semua"] + list(data['Region'].unique()), 
-        key="select_Region"
+flag_grafik = st.checkbox('Tampilkan Grafik Tingkat Kemiskinan')
+
+if flag_grafik:
+    # Grafik utama tingkat kemiskinan
+    grafik = px.line(
+        df_kabupaten,
+        x='Tahun',
+        y='Tingkat Kemiskinan',
+        color='Kabupaten/Kota',  # Menambahkan warna berdasarkan Kabupaten/Kota
+        title=f'Tingkat Kemiskinan di {kabupaten_terpilih} (2015-2020)' if kabupaten_terpilih != 'Semua' else 'Tingkat Kemiskinan di Semua Kabupaten/Kota (2015-2020)',
+        markers=True
+    )
+    st.plotly_chart(grafik)
+
+# Menambahkan grafik untuk kabupaten/kota terparah dan paling kecil kemiskinan hanya jika 'Semua' dipilih dan checkbox dicentang
+flag_terparah_terendah = st.checkbox('Tampilkan Kabupaten/Kota yang memiliki tingkat Kemiskinan Tertinggi dan Terendah')
+
+if flag_terparah_terendah and kabupaten_terpilih == 'Semua':
+    st.write("## Kabupaten/Kota Tertinggi dan Paling Kecil Kemiskinan")
+
+    # Mencari kabupaten/kota dengan tingkat kemiskinan tertinggi dan terendah setiap tahun
+    df_terparah = df_kabupaten.groupby('Tahun')['Tingkat Kemiskinan'].idxmax()  # Menggunakan 'Tingkat Kemiskinan'
+    df_terendah = df_kabupaten.groupby('Tahun')['Tingkat Kemiskinan'].idxmin()  # Menggunakan 'Tingkat Kemiskinan'
+
+    # Menyiapkan data untuk grafik tertinggi dan terendah
+    df_terparah_data = df_kabupaten.loc[df_terparah]
+    df_terendah_data = df_kabupaten.loc[df_terendah]
+
+    # Grafik untuk kabupaten/kota dengan kemiskinan tertinggi dan terendah
+    fig_terparah = px.line(
+        df_terparah_data,
+        x='Tahun',
+        y='Tingkat Kemiskinan',  # Menggunakan 'Tingkat Kemiskinan' di sini
+        color='Kabupaten/Kota',
+        title='Kabupaten/Kota dengan Tingkat Kemiskinan Tertinggi (2015-2020)',
+        markers=True
     )
 
-    # Pilih Tahun
-    year = st.selectbox(
-        "Pilih TAHUN:", 
-        options=["Semua"] + sorted(data['TAHUN'].unique())
+    fig_terendah = px.line(
+        df_terendah_data,
+        x='Tahun',
+        y='Tingkat Kemiskinan',  # Menggunakan 'Tingkat Kemiskinan' di sini
+        color='Kabupaten/Kota',
+        title='Kabupaten/Kota dengan Tingkat Kemiskinan Terendah (2015-2020)',
+        markers=True
     )
 
-    # Filter data
-    filtered_data = data.copy()
-    if region != "Semua":
-        filtered_data = filtered_data[filtered_data['Region'] == region]
-    if year != "Semua":
-        filtered_data = filtered_data[filtered_data['TAHUN'] == int(year)]
+    # Menampilkan grafik
+    st.plotly_chart(fig_terparah)
+    st.plotly_chart(fig_terendah)
 
-    if filtered_data.empty:
-        st.warning("Tidak ada data yang sesuai dengan pilihan.")
-    else:
-        # Transformasi data untuk visualisasi
-        melted_data = filtered_data.melt(
-            id_vars=['Region', 'TAHUN'],
-            value_vars=[
-                'TINGKAT KEMISKINAN (Rb Orang)', 
-                'PRESENTASE PENDUDUK MISKIN', 
-                'PDRB HARGA KONSTAN', 
-                'INDEKS PEMBANGUNAN MANUSIA (IPM)'
-            ],
-            var_name='Indikator',
-            value_name='Nilai'
-        )
-
-        # Visualisasi
-        st.header("Tren Kemiskinan dan Indikator Terkait")
-        line_chart = alt.Chart(melted_data).mark_line().encode(
-            x='TAHUN:O',
-            y='Nilai:Q',
-            color='Indikator:N',
-            tooltip=['Region:N', 'TAHUN:O', 'Indikator:N', 'Nilai:Q']
-        ).interactive()
-
-        st.altair_chart(line_chart, use_container_width=True)
-
-
+# Pilihan tabel
+flag_tampil = st.checkbox('Tampilkan Tabel')
+if flag_tampil:
+    st.write(df_kabupaten)
 
 st.write("## Analisis")
 st.write("Buat analisis sederhana dari visualisasi data yang muncul di bagian sebelumnya.")
