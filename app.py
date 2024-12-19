@@ -11,6 +11,9 @@ kamus_ticker = {row['Kabupaten/Kota']: row['Kabupaten/Kota'] for _, row in df.it
 
 st.title("Analisis Jumlah Penduduk Miskin di Provinsi Jawa Tengah")
 
+# Menampilkan gambar dengan st.image()
+st.image("image.jpg", width=600)  # Ganti dengan ukuran yang sesuai
+
 st.write("# Tugas Kelompok PasmingBased")
 
 st.write("## Pendahuluan")
@@ -35,92 +38,48 @@ if kabupaten_terpilih == 'Semua':
 else:
     df_kabupaten = df[df['Kabupaten/Kota'] == kabupaten_terpilih]  # Jika kabupaten/kota dipilih, filter data sesuai
 
-<<<<<<< HEAD
+# Checkbox untuk menampilkan grafik utama
 flag_grafik = st.checkbox('Tampilkan Grafik Tingkat Kemiskinan')
 
+# Grafik hanya akan muncul jika checkbox dicentang
 if flag_grafik:
-    # Grafik utama tingkat kemiskinan
-=======
-# Pilihan grafik
-flag_grafik = st.checkbox('Tampilkan Grafik Tingkat Kemiskinan')
-if flag_grafik:
->>>>>>> f0a96f23ab6ad017527185b64e34053e4da03c49
-    grafik = px.line(
-        df_kabupaten,
-        x='Tahun',
-        y='Tingkat Kemiskinan',
-        color='Kabupaten/Kota',  # Menambahkan warna berdasarkan Kabupaten/Kota
-        title=f'Tingkat Kemiskinan di {kabupaten_terpilih} (2015-2020)' if kabupaten_terpilih != 'Semua' else 'Tingkat Kemiskinan di Semua Kabupaten/Kota (2015-2020)',
-        markers=True
-<<<<<<< HEAD
-    )
-    st.plotly_chart(grafik)
-
-# Menambahkan grafik untuk kabupaten/kota terparah dan paling kecil kemiskinan hanya jika 'Semua' dipilih dan checkbox dicentang
-flag_terparah_terendah = st.checkbox('Tampilkan Kabupaten/Kota yang memiliki tingkat Kemiskinan Tertinggi dan Terendah')
-
-if flag_terparah_terendah and kabupaten_terpilih == 'Semua':
-    st.write("## Kabupaten/Kota Tertinggi dan Paling Kecil Kemiskinan")
-
-    # Mencari kabupaten/kota dengan tingkat kemiskinan tertinggi dan terendah setiap tahun
-    df_terparah = df_kabupaten.groupby('Tahun')['Tingkat Kemiskinan'].idxmax()  # Menggunakan 'Tingkat Kemiskinan'
-    df_terendah = df_kabupaten.groupby('Tahun')['Tingkat Kemiskinan'].idxmin()  # Menggunakan 'Tingkat Kemiskinan'
-
-    # Menyiapkan data untuk grafik tertinggi dan terendah
-    df_terparah_data = df_kabupaten.loc[df_terparah]
-    df_terendah_data = df_kabupaten.loc[df_terendah]
-
-    # Grafik untuk kabupaten/kota dengan kemiskinan tertinggi dan terendah
-    fig_terparah = px.line(
-        df_terparah_data,
-        x='Tahun',
-        y='Tingkat Kemiskinan',  # Menggunakan 'Tingkat Kemiskinan' di sini
-        color='Kabupaten/Kota',
-        title='Kabupaten/Kota dengan Tingkat Kemiskinan Tertinggi (2015-2020)',
-        markers=True
-=======
->>>>>>> f0a96f23ab6ad017527185b64e34053e4da03c49
-    )
-    st.plotly_chart(grafik)
-
-<<<<<<< HEAD
-    fig_terendah = px.line(
-        df_terendah_data,
-        x='Tahun',
-        y='Tingkat Kemiskinan',  # Menggunakan 'Tingkat Kemiskinan' di sini
-        color='Kabupaten/Kota',
-        title='Kabupaten/Kota dengan Tingkat Kemiskinan Terendah (2015-2020)',
-        markers=True
-    )
-
-    # Menampilkan grafik
-    st.plotly_chart(fig_terparah)
-    st.plotly_chart(fig_terendah)
-=======
-# Pilihan tabel
-flag_tampil = st.checkbox('Tampilkan Tabel')
-if flag_tampil:
-    st.write(df_kabupaten)
-
-
-
-
->>>>>>> f0a96f23ab6ad017527185b64e34053e4da03c49
-
-# Pilihan tabel
-flag_tampil = st.checkbox('Tampilkan Tabel')
-if flag_tampil:
-    st.write(df_kabupaten)
+    # Pastikan kolom yang dipilih ada dalam dataset
+    if 'Tingkat Kemiskinan' in df_kabupaten.columns:
+        grafik = px.line(
+            df_kabupaten,
+            x='Tahun',
+            y='Tingkat Kemiskinan',
+            color='Kabupaten/Kota',  # Menambahkan warna berdasarkan Kabupaten/Kota
+            title=f'Tingkat Kemiskinan di {kabupaten_terpilih} (2015-2020)' if kabupaten_terpilih != 'Semua' else 'Tingkat Kemiskinan di Semua Kabupaten/Kota (2015-2020)',
+            markers=True
+        )
+        st.plotly_chart(grafik)  # Menampilkan grafik
+    else:
+        st.error("Kolom 'Tingkat Kemiskinan' tidak ditemukan dalam data.")
 
 st.write("## Analisis")
-st.write("Buat analisis sederhana dari visualisasi data yang muncul di bagian sebelumnya.")
+st.write("""
+Kemiskinan di Jawa Tengah merupakan isu yang kompleks dan berkelanjutan, dengan tingkat kemiskinan yang masih tinggi dibandingkan dengan provinsi lain di Pulau Jawa.Pada tahun 2015, jumlah penduduk miskin di Provinsi Jawa Tengah tercatat sebanyak 4,577 ribu orang. Jumlah ini menunjukkan kondisi awal yang cukup signifikan dalam upaya pengentasan kemiskinan di wilayah tersebut. Pada tahun ini, Kabupaten Brebes mencatat jumlah penduduk miskin tertinggi, yaitu 352 ribu orang, sedangkan Kabupaten Salatiga memiliki jumlah penduduk miskin terendah dengan 10.6 ribu orang.
+
+Memasuki tahun 2016, terjadi penurunan jumlah penduduk miskin menjadi 4,506.8 ribu orang. Kabupaten Brebes tetap mencatat jumlah penduduk miskin tertinggi dengan 348 ribu orang, sementara Kabupaten Salatiga kembali mencatat jumlah penduduk miskin terendah sebesar 9.7 ribu orang.
+
+Pada tahun 2017, jumlah penduduk miskin tercatat 4,450.9 ribu orang, dengan Kabupaten Brebes masih menjadi kabupaten dengan jumlah penduduk miskin tertinggi sebesar 343.5 ribu orang. Di sisi lain, jumlah penduduk miskin terendah masih tercatat di Kabupaten Salatiga dengan 9.6 ribu orang.
+
+Tahun 2018 menunjukkan penurunan yang lebih tajam, di mana jumlah penduduk miskin menjadi 3,896.9 ribu orang. Kabupaten Banyumas tetap menjadi yang tertinggi dengan 309.2 ribu orang, sedangkan Kabupaten Salatiga mempertahankan posisinya sebagai yang terendah dengan 9.2 ribu orang.
+
+Pada tahun 2019, jumlah penduduk miskin mencapai 3,743.3 ribu orang. Kabupaten Brebes kembali mencatat jumlah penduduk miskin tertinggi sebesar 293.2 ribu orang, sementara Kabupaten Salatiga tetap menjadi yang terendah dengan 9.1 ribu orang.
+
+Namun, tren ini berubah pada tahun 2020, di mana jumlah penduduk miskin kembali meningkat menjadi 3,980.9 ribu orang, diduga kuat dipengaruhi oleh dampak pandemi COVID-19. Kabupaten Brebes tetap mencatat jumlah penduduk miskin tertinggi sebesar308.8 ribu orang, sedangkan Kabupaten Salatiga memiliki jumlah penduduk miskin terendah dengan 9.7 ribu orang
+""")
 
 st.write("## Kesimpulan")
-st.write("Tuliskan butir-butir kesimpulan dari analisis.")
+st.write("""
+Kemiskinan di Jawa Tengah adalah masalah yang memerlukan perhatian serius dari berbagai pihak. 
+- Kabupaten Brebes secara konsisten memiliki jumlah penduduk miskin tertinggi selama periode 2015-2020. 
+- Kabupaten Salatiga memiliki jumlah penduduk miskin terendah, mencerminkan kemungkinan keberhasilan program lokal.
+- Penurunan jumlah penduduk miskin hingga 2019 mencerminkan keberhasilan program pemerintah, namun pandemi 2020 menunjukkan perlunya strategi yang lebih tangguh.
+""")
 
 st.write("## Referensi / Daftar Pustaka")
-<<<<<<< HEAD
-st.write("Tuliskan di bagian ini referensi yang digunakan dalam proyek kelompok ini, misalnya sumber data, makalah ilmiah, dsb.")
-=======
-st.write("Tuliskan di bagian ini referensi yang digunakan dalam proyek kelompok ini, misalnya sumber data, makalah ilmi
->>>>>>> f0a96f23ab6ad017527185b64e34053e4da03c49
+st.write("Badan Pusat Statistik (BPS)")
+
