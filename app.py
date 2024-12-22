@@ -1,13 +1,10 @@
-
 import pandas as pd
 import streamlit as st
 import plotly.express as px
 
 # Load data
-import pandas as pd
-
-data_file = "your_excel_file.xlsx"
-df = pd.read_excel(data_file, engine="openpyxl")
+data_file = "Kemiskinan.xlsx"
+df = pd.read_excel(data_file)
 
 # Dictionary for mapping regions
 kamus_ticker = {row['Kabupaten/Kota']: row['Kabupaten/Kota'] for _, row in df.iterrows()}
